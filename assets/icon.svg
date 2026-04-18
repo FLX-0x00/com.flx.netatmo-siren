@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Netatmo Community — app icon. Glyph: Phosphor "house-line-fill" (MIT) -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#2F2F2F"/>
-      <stop offset="1" stop-color="#1E1E1E"/>
-    </linearGradient>
-  </defs>
-  <rect width="256" height="256" rx="48" fill="url(#bg)"/>
-  <!-- Bell body -->
-  <path d="M128 60c-28 0-50 22-50 50v38l-14 20h128l-14-20v-38c0-28-22-50-50-50z"
-        fill="#F5A623" stroke="#FF7A00" stroke-width="4" stroke-linejoin="round"/>
-  <!-- Clapper -->
-  <rect x="120" y="176" width="16" height="14" rx="3" fill="#FF7A00"/>
-  <!-- Sound arcs -->
-  <g fill="none" stroke="#FF7A00" stroke-width="6" stroke-linecap="round">
-    <path d="M56 110c0-14 6-26 16-34"/>
-    <path d="M40 120c0-22 10-42 26-56"/>
-    <path d="M200 110c0-14-6-26-16-34"/>
-    <path d="M216 120c0-22-10-42-26-56"/>
+  <rect width="256" height="256" rx="48" fill="#2B2B2B"/>
+  <g transform="translate(32 32) scale(0.75)" fill="#FF7A00">
+    <path d="M240,208H224V136l2.34,2.34A8,8,0,0,0,237.66,127L139.31,28.68a16,16,0,0,0-22.62,0L18.34,127a8,8,0,0,0,11.32,11.31L32,136v72H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16Zm-88,0H104V160a4,4,0,0,1,4-4h40a4,4,0,0,1,4,4Z"/>
   </g>
 </svg>

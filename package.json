@@ -1,7 +1,7 @@
 {
-  "name": "com.flx.netatmo-siren",
-  "version": "1.0.0",
-  "description": "Control Netatmo Smart Sirens and Outdoor Cameras with siren from Homey Pro.",
+  "name": "com.flx.netatmo-community",
+  "version": "2.0.0",
+  "description": "Comprehensive Netatmo Security integration for Homey Pro — rich flow cards for indoor & outdoor cameras and the video doorbell.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"No tests yet\" && exit 0",

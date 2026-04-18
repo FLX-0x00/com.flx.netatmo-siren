@@ -1,16 +1,17 @@
 {
-  "id": "com.flx.netatmo-siren",
-  "version": "1.0.0",
+  "id": "com.flx.netatmo-community",
+  "version": "2.0.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": ["local", "cloud"],
   "name": {
-    "en": "Netatmo Siren"
+    "en": "Netatmo Community"
   },
   "description": {
-    "en": "Fast and exclusive control of Netatmo Smart Sirens and Outdoor Cameras with built-in siren."
+    "en": "Comprehensive Netatmo Security integration for Homey Pro: rich flow cards for indoor & outdoor cameras and the video doorbell."
   },
   "category": ["security"],
+  "brandColor": "#FF7A00",
   "permissions": [],
   "images": {
     "small": "/assets/images/small.png",
@@ -18,184 +19,298 @@
     "xlarge": "/assets/images/xlarge.png"
   },
   "author": {
-    "name": "FLX"
+    "name": "Felix",
+    "email": "felix@flx.com"
   },
-  "brandColor": "#2B2B2B",
-  "drivers": [
-    {
-      "id": "standalone_siren",
-      "name": {
-        "en": "Netatmo Smart Indoor Siren"
-      },
-      "class": "other",
-      "capabilities": ["onoff"],
-      "capabilitiesOptions": {
-        "onoff": {
-          "title": {
-            "en": "Siren"
-          },
-          "insightsTitleTrue": {
-            "en": "Siren activated"
-          },
-          "insightsTitleFalse": {
-            "en": "Siren deactivated"
-          }
-        }
-      },
-      "platforms": ["local", "cloud"],
-      "connectivity": ["cloud"],
-      "images": {
-        "small": "/drivers/standalone_siren/assets/images/small.png",
-        "large": "/drivers/standalone_siren/assets/images/large.png",
-        "xlarge": "/drivers/standalone_siren/assets/images/xlarge.png"
-      },
-      "pair": [
-        {
-          "id": "login_oauth2",
-          "template": "login_oauth2"
-        },
-        {
-          "id": "list_devices",
-          "template": "list_devices",
-          "navigation": {
-            "next": "add_devices"
-          }
-        },
-        {
-          "id": "add_devices",
-          "template": "add_devices"
-        }
-      ]
-    },
-    {
-      "id": "outdoor_camera_siren",
-      "name": {
-        "en": "Netatmo Outdoor Camera Siren"
-      },
-      "class": "other",
-      "capabilities": ["onoff"],
-      "capabilitiesOptions": {
-        "onoff": {
-          "title": {
-            "en": "Siren"
-          },
-          "insightsTitleTrue": {
-            "en": "Siren activated"
-          },
-          "insightsTitleFalse": {
-            "en": "Siren deactivated"
-          }
-        }
-      },
-      "platforms": ["local", "cloud"],
-      "connectivity": ["cloud"],
-      "images": {
-        "small": "/drivers/outdoor_camera_siren/assets/images/small.png",
-        "large": "/drivers/outdoor_camera_siren/assets/images/large.png",
-        "xlarge": "/drivers/outdoor_camera_siren/assets/images/xlarge.png"
-      },
-      "pair": [
-        {
-          "id": "login_oauth2",
-          "template": "login_oauth2"
-        },
-        {
-          "id": "list_devices",
-          "template": "list_devices",
-          "navigation": {
-            "next": "add_devices"
-          }
-        },
-        {
-          "id": "add_devices",
-          "template": "add_devices"
-        }
+
+  "capabilities": {
+    "light_mode": {
+      "type": "enum",
+      "title": { "en": "Floodlight" },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "values": [
+        { "id": "on",   "title": { "en": "On" } },
+        { "id": "off",  "title": { "en": "Off" } },
+        { "id": "auto", "title": { "en": "Auto" } }
       ]
     }
-  ],
+  },
+
   "flow": {
     "triggers": [
-      {
-        "id": "siren_turned_on",
-        "title": {
-          "en": "The siren was activated"
-        },
-        "hint": {
-          "en": "Triggers when the Netatmo siren starts sounding."
-        },
-        "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
-          }
+      { "id": "motion_detected", "title": { "en": "Motion detected" }, "tokens": [
+          { "name": "message", "type": "string", "title": { "en": "Message" } },
+          { "name": "event_type", "type": "string", "title": { "en": "Event type" } }
+        ], "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera|outdoor_camera|doorbell" }
         ]
       },
-      {
-        "id": "siren_turned_off",
-        "title": {
-          "en": "The siren was deactivated"
-        },
-        "hint": {
-          "en": "Triggers when the Netatmo siren stops sounding."
-        },
-        "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
-          }
+      { "id": "person_detected", "title": { "en": "A person is detected" }, "titleFormatted": { "en": "[[person]] was detected" }, "tokens": [
+          { "name": "person_name", "type": "string", "title": { "en": "Person" } },
+          { "name": "message", "type": "string", "title": { "en": "Message" } },
+          { "name": "event_type", "type": "string", "title": { "en": "Event type" } }
+        ], "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" },
+          { "name": "person", "type": "autocomplete", "title": { "en": "Person" } }
+        ]
+      },
+      { "id": "unknown_person_detected", "title": { "en": "An unknown person is detected" }, "tokens": [
+          { "name": "message", "type": "string", "title": { "en": "Message" } },
+          { "name": "event_type", "type": "string", "title": { "en": "Event type" } }
+        ], "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" }
+        ]
+      },
+      { "id": "person_left", "title": { "en": "Person left home" }, "titleFormatted": { "en": "[[person]] left home" }, "tokens": [
+          { "name": "person_name", "type": "string", "title": { "en": "Person" } },
+          { "name": "message", "type": "string", "title": { "en": "Message" } },
+          { "name": "event_type", "type": "string", "title": { "en": "Event type" } }
+        ], "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" },
+          { "name": "person", "type": "autocomplete", "title": { "en": "Person" } }
+        ]
+      },
+      { "id": "person_came_home", "title": { "en": "Person came home" }, "titleFormatted": { "en": "[[person]] came home" }, "tokens": [
+          { "name": "person_name", "type": "string", "title": { "en": "Person" } },
+          { "name": "message", "type": "string", "title": { "en": "Message" } },
+          { "name": "event_type", "type": "string", "title": { "en": "Event type" } }
+        ], "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" },
+          { "name": "person", "type": "autocomplete", "title": { "en": "Person" } }
+        ]
+      },
+
+      { "id": "human_detected", "title": { "en": "A human is detected" }, "tokens": [
+          { "name": "message", "type": "string", "title": { "en": "Message" } },
+          { "name": "event_type", "type": "string", "title": { "en": "Event type" } }
+        ], "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
+        ]
+      },
+      { "id": "vehicle_detected", "title": { "en": "A vehicle is detected" }, "tokens": [
+          { "name": "message", "type": "string", "title": { "en": "Message" } },
+          { "name": "event_type", "type": "string", "title": { "en": "Event type" } }
+        ], "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
+        ]
+      },
+      { "id": "animal_detected", "title": { "en": "An animal is detected" }, "tokens": [
+          { "name": "message", "type": "string", "title": { "en": "Message" } },
+          { "name": "event_type", "type": "string", "title": { "en": "Event type" } }
+        ], "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
+        ]
+      },
+      { "id": "siren_started", "title": { "en": "Siren started sounding" }, "hint": { "en": "Read-only: fires when the camera's built-in siren starts sounding. This app cannot trigger the siren itself." }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
+        ]
+      },
+      { "id": "siren_stopped", "title": { "en": "Siren stopped sounding" }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
+        ]
+      },
+      { "id": "floodlight_changed", "title": { "en": "Floodlight mode changed" }, "tokens": [
+          { "name": "mode", "type": "string", "title": { "en": "Mode" } }
+        ], "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
+        ]
+      },
+      { "id": "daily_summary_ready", "title": { "en": "Daily summary available" }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
+        ]
+      },
+
+      { "id": "doorbell_rang", "title": { "en": "Doorbell was pressed" }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=doorbell" }
+        ]
+      },
+      { "id": "doorbell_call_accepted", "title": { "en": "Doorbell call was accepted" }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=doorbell" }
+        ]
+      },
+      { "id": "doorbell_call_missed", "title": { "en": "Doorbell call was missed" }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=doorbell" }
+        ]
+      },
+
+      { "id": "camera_connected", "title": { "en": "Camera came online" }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera|outdoor_camera|doorbell" }
+        ]
+      },
+      { "id": "camera_disconnected", "title": { "en": "Camera went offline" }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera|outdoor_camera|doorbell" }
+        ]
+      },
+      { "id": "monitoring_turned_on", "title": { "en": "Monitoring turned on" }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera|outdoor_camera" }
+        ]
+      },
+      { "id": "monitoring_turned_off", "title": { "en": "Monitoring turned off" }, "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera|outdoor_camera" }
         ]
       }
     ],
+
     "conditions": [
-      {
-        "id": "is_siren_sounding",
-        "title": {
-          "en": "The siren !{{is|is not}} sounding"
-        },
+      { "id": "is_monitoring_on",
+        "title": { "en": "Monitoring !{{is|isn't}} on" },
         "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
-          }
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera|outdoor_camera" }
+        ]
+      },
+      { "id": "is_floodlight",
+        "title": { "en": "Floodlight mode !{{is|isn't}} [[mode]]" },
+        "titleFormatted": { "en": "Floodlight mode !{{is|isn't}} [[mode]]" },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" },
+          { "name": "mode", "type": "dropdown", "values": [
+            { "id": "on", "label": { "en": "On" } },
+            { "id": "off", "label": { "en": "Off" } },
+            { "id": "auto", "label": { "en": "Auto" } }
+          ] }
+        ]
+      },
+      { "id": "is_siren_sounding",
+        "title": { "en": "Siren !{{is|isn't}} sounding" },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
+        ]
+      },
+      { "id": "is_person_home",
+        "title": { "en": "Person !{{is|isn't}} home" },
+        "titleFormatted": { "en": "[[person]] !{{is|isn't}} home" },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" },
+          { "name": "person", "type": "autocomplete", "title": { "en": "Person" } }
         ]
       }
     ],
+
     "actions": [
-      {
-        "id": "sound_the_alarm",
-        "title": {
-          "en": "Sound the alarm"
-        },
-        "hint": {
-          "en": "Activates the Netatmo siren immediately."
-        },
+      { "id": "turn_monitoring_on",
+        "title": { "en": "Turn monitoring on" },
         "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
-          }
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera|outdoor_camera" }
         ]
       },
-      {
-        "id": "silence_the_alarm",
-        "title": {
-          "en": "Silence the alarm"
-        },
-        "hint": {
-          "en": "Deactivates the Netatmo siren."
-        },
+      { "id": "turn_monitoring_off",
+        "title": { "en": "Turn monitoring off" },
         "args": [
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
-          }
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera|outdoor_camera" }
+        ]
+      },
+      { "id": "set_floodlight_mode",
+        "title": { "en": "Set floodlight to [[mode]]" },
+        "titleFormatted": { "en": "Set floodlight to [[mode]]" },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" },
+          { "name": "mode", "type": "dropdown", "values": [
+            { "id": "on", "label": { "en": "On" } },
+            { "id": "off", "label": { "en": "Off" } },
+            { "id": "auto", "label": { "en": "Auto" } }
+          ] }
+        ]
+      },
+      { "id": "set_person_home",
+        "title": { "en": "Mark person as home" },
+        "titleFormatted": { "en": "Mark [[person]] as home" },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" },
+          { "name": "person", "type": "autocomplete", "title": { "en": "Person" } }
+        ]
+      },
+      { "id": "set_person_away",
+        "title": { "en": "Mark person as away" },
+        "titleFormatted": { "en": "Mark [[person]] as away" },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" },
+          { "name": "person", "type": "autocomplete", "title": { "en": "Person" } }
+        ]
+      },
+      { "id": "set_home_empty",
+        "title": { "en": "Mark home as empty" },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" }
         ]
       }
     ]
-  }
+  },
+
+  "drivers": [
+    {
+      "id": "indoor_camera",
+      "name": { "en": "Smart Indoor Camera" },
+      "class": "camera",
+      "capabilities": ["onoff", "alarm_motion"],
+      "capabilitiesOptions": {
+        "onoff": {
+          "title": { "en": "Monitoring" },
+          "insightsTitleTrue": { "en": "Monitoring turned on" },
+          "insightsTitleFalse": { "en": "Monitoring turned off" }
+        }
+      },
+      "platforms": ["local", "cloud"],
+      "connectivity": ["cloud"],
+      "images": {
+        "small": "/drivers/indoor_camera/assets/images/small.png",
+        "large": "/drivers/indoor_camera/assets/images/large.png",
+        "xlarge": "/drivers/indoor_camera/assets/images/xlarge.png"
+      },
+      "pair": [
+        { "id": "login_oauth2", "template": "login_oauth2" },
+        { "id": "list_devices", "template": "list_devices", "navigation": { "next": "add_devices" } },
+        { "id": "add_devices", "template": "add_devices" }
+      ]
+    },
+    {
+      "id": "outdoor_camera",
+      "name": { "en": "Smart Outdoor Camera" },
+      "class": "camera",
+      "capabilities": ["onoff", "alarm_motion", "light_mode"],
+      "capabilitiesOptions": {
+        "onoff": {
+          "title": { "en": "Monitoring" },
+          "insightsTitleTrue": { "en": "Monitoring turned on" },
+          "insightsTitleFalse": { "en": "Monitoring turned off" }
+        }
+      },
+      "platforms": ["local", "cloud"],
+      "connectivity": ["cloud"],
+      "images": {
+        "small": "/drivers/outdoor_camera/assets/images/small.png",
+        "large": "/drivers/outdoor_camera/assets/images/large.png",
+        "xlarge": "/drivers/outdoor_camera/assets/images/xlarge.png"
+      },
+      "pair": [
+        { "id": "login_oauth2", "template": "login_oauth2" },
+        { "id": "list_devices", "template": "list_devices", "navigation": { "next": "add_devices" } },
+        { "id": "add_devices", "template": "add_devices" }
+      ]
+    },
+    {
+      "id": "doorbell",
+      "name": { "en": "Smart Video Doorbell" },
+      "class": "doorbell",
+      "capabilities": ["alarm_generic"],
+      "capabilitiesOptions": {
+        "alarm_generic": {
+          "title": { "en": "Doorbell pressed" }
+        }
+      },
+      "platforms": ["local", "cloud"],
+      "connectivity": ["cloud"],
+      "images": {
+        "small": "/drivers/doorbell/assets/images/small.png",
+        "large": "/drivers/doorbell/assets/images/large.png",
+        "xlarge": "/drivers/doorbell/assets/images/xlarge.png"
+      },
+      "pair": [
+        { "id": "login_oauth2", "template": "login_oauth2" },
+        { "id": "list_devices", "template": "list_devices", "navigation": { "next": "add_devices" } },
+        { "id": "add_devices", "template": "add_devices" }
+      ]
+    }
+  ]
 }

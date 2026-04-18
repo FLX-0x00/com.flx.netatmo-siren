@@ -2,121 +2,228 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Netatmo Siren — Settings</title>
+  <title>Netatmo Community — Settings</title>
   <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+  <!-- Tabler Icons (MIT) — https://tabler.io/icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css" />
   <style>
     :root {
-      --bg: #f7f7f8;
-      --fg: #2b2b2b;
-      --muted: #6b6b70;
+      --bg: #0f1115;
+      --panel: #171a20;
+      --panel-2: #1f232b;
+      --border: #2a2f38;
+      --fg: #f3f4f6;
+      --muted: #9aa0aa;
       --accent: #ff7a00;
-      --accent-hover: #e56d00;
-      --border: #e2e2e6;
-      --card: #ffffff;
-      --ok: #2e7d32;
-      --err: #c62828;
+      --accent-hover: #ff8f26;
+      --ok: #5fd66b;
+      --err: #ff6b6b;
+      --radius: 12px;
     }
     * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--fg);
       margin: 0;
       padding: 24px;
       font-size: 14px;
+      line-height: 1.45;
     }
-    h1 { font-size: 20px; margin: 0 0 4px; }
-    p.lead { color: var(--muted); margin: 0 0 20px; }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
+    .wrap { max-width: 560px; margin: 0 auto; }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .badge {
+      width: 44px; height: 44px;
       border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 16px;
+      background: #2B2B2B;
+      display: grid; place-items: center;
+      color: var(--accent);
+      font-size: 24px;
+      flex-shrink: 0;
     }
+    h1 { font-size: 18px; margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+    .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .field { margin-bottom: 14px; }
+    .field:last-of-type { margin-bottom: 0; }
     label {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       font-weight: 600;
       margin-bottom: 6px;
+      font-size: 13px;
     }
+    label i { color: var(--muted); font-size: 16px; }
     .hint {
       color: var(--muted);
       font-size: 12px;
-      margin: -2px 0 10px;
+      margin: 0 0 8px;
     }
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 10px 12px;
+
+    .input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel-2);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
+      padding: 0 12px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .input:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.18);
+    }
+    .input > i { color: var(--muted); font-size: 18px; }
+    .input input {
+      flex: 1;
+      background: transparent;
+      border: 0;
+      color: var(--fg);
+      padding: 11px 0;
       font-size: 14px;
       font-family: inherit;
-      background: #fff;
-      color: var(--fg);
+      outline: none;
+      letter-spacing: 0.01em;
     }
-    input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
-    .row { margin-bottom: 14px; }
-    .actions { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
-    button {
-      background: var(--accent);
-      color: #fff;
+    .input input::placeholder { color: #5c6370; }
+    .input button.reveal {
+      background: transparent;
       border: 0;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 4px;
+      font-size: 18px;
+      display: grid;
+      place-items: center;
+    }
+    .input button.reveal:hover { color: var(--fg); }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 16px;
+    }
+    button.btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       padding: 10px 16px;
-      border-radius: 8px;
+      border-radius: 10px;
+      border: 0;
       font-weight: 600;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
-    button:hover { background: var(--accent-hover); }
-    button.secondary {
+    .btn.primary { background: var(--accent); color: #0f1115; }
+    .btn.primary:hover { background: var(--accent-hover); }
+    .btn.ghost {
       background: transparent;
-      color: var(--fg);
+      color: var(--muted);
       border: 1px solid var(--border);
     }
-    #status { font-size: 13px; }
+    .btn.ghost:hover { color: var(--fg); border-color: #3a3f48; }
+
+    #status {
+      font-size: 12.5px;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
     #status.ok { color: var(--ok); }
     #status.err { color: var(--err); }
-    code {
-      background: #f0f0f2;
-      padding: 2px 6px;
+
+    .info {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: rgba(255, 122, 0, 0.08);
+      border: 1px solid rgba(255, 122, 0, 0.25);
+      color: #ffd7b0;
+      font-size: 12.5px;
+    }
+    .info > i { color: var(--accent); font-size: 18px; line-height: 1; padding-top: 1px; }
+    .info a { color: #ffd7b0; text-decoration: underline; }
+
+    code.kbd {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
       border-radius: 4px;
       font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
     }
   </style>
 </head>
 <body>
-  <h1>Netatmo Connect Credentials</h1>
-  <p class="lead">
-    Create an app at
-    <a href="https://dev.netatmo.com/apps" target="_blank" rel="noopener">dev.netatmo.com/apps</a>
-    and paste the Client ID and Client Secret below. Redirect URI must be
-    <code>https://callback.athom.com/oauth2/callback</code>.
-  </p>
+  <div class="wrap">
+    <header>
+      <div class="badge"><i class="ti ti-bell-ringing"></i></div>
+      <div>
+        <h1>Netatmo Connect Credentials</h1>
+        <div class="sub">Link your personal Netatmo developer app to this Homey app.</div>
+      </div>
+    </header>
 
-  <div class="card">
-    <div class="row">
-      <label for="client_id">Client ID</label>
-      <div class="hint">Public identifier of your Netatmo app.</div>
-      <input type="text" id="client_id" autocomplete="off" spellcheck="false" />
+    <div class="card">
+      <div class="field">
+        <label for="client_id"><i class="ti ti-id"></i> Client ID</label>
+        <div class="hint">Public identifier of your Netatmo app.</div>
+        <div class="input">
+          <i class="ti ti-user-circle"></i>
+          <input id="client_id" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. 6803a2fa9b1c…" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="client_secret"><i class="ti ti-key"></i> Client Secret</label>
+        <div class="hint">Stored locally on your Homey. Keep it private.</div>
+        <div class="input">
+          <i class="ti ti-lock"></i>
+          <input id="client_secret" type="password" autocomplete="off" spellcheck="false" placeholder="••••••••••••••••" />
+          <button type="button" class="reveal" id="reveal" title="Show / hide"><i class="ti ti-eye"></i></button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="save" class="btn primary"><i class="ti ti-device-floppy"></i> Save</button>
+        <button id="clear" class="btn ghost" type="button"><i class="ti ti-eraser"></i> Clear</button>
+        <span id="status"></span>
+      </div>
     </div>
 
-    <div class="row">
-      <label for="client_secret">Client Secret</label>
-      <div class="hint">Keep this secret. Stored locally on your Homey.</div>
-      <input type="password" id="client_secret" autocomplete="off" spellcheck="false" />
-    </div>
-
-    <div class="actions">
-      <button id="save">Save</button>
-      <button id="clear" class="secondary" type="button">Clear</button>
-      <span id="status"></span>
+    <div class="info">
+      <i class="ti ti-info-circle"></i>
+      <div>
+        Create an app at <a href="https://dev.netatmo.com/apps" target="_blank" rel="noopener">dev.netatmo.com/apps</a>
+        and set the redirect URI to <code class="kbd">https://callback.athom.com/oauth2/callback</code>.
+        After saving, the app restarts automatically. If you have already paired devices,
+        <strong>remove and re-pair them</strong> so a new token with the correct scopes is issued.
+      </div>
     </div>
   </div>
-
-  <p class="hint">
-    After saving, any existing Netatmo login session will be cleared. You will
-    need to re-pair your devices so the new credentials are used.
-  </p>
 
   <script type="text/javascript">
     function onHomeyReady(Homey) {
@@ -125,47 +232,50 @@
       const statusEl = document.getElementById('status');
       const saveBtn = document.getElementById('save');
       const clearBtn = document.getElementById('clear');
+      const revealBtn = document.getElementById('reveal');
 
       function setStatus(msg, kind) {
-        statusEl.textContent = msg || '';
+        if (!msg) { statusEl.textContent = ''; statusEl.className = ''; return; }
+        const icon = kind === 'ok' ? 'ti-circle-check' : kind === 'err' ? 'ti-alert-triangle' : 'ti-loader-2';
         statusEl.className = kind || '';
+        statusEl.innerHTML = '<i class="ti ' + icon + '"></i>' + msg;
       }
 
-      Homey.get('netatmo_client_id', (err, val) => {
+      Homey.get('netatmo_client_id', function (err, val) {
         if (!err && typeof val === 'string') idEl.value = val;
       });
-      Homey.get('netatmo_client_secret', (err, val) => {
+      Homey.get('netatmo_client_secret', function (err, val) {
         if (!err && typeof val === 'string') secretEl.value = val;
       });
 
-      saveBtn.addEventListener('click', () => {
-        const clientId = idEl.value.trim();
-        const clientSecret = secretEl.value.trim();
+      revealBtn.addEventListener('click', function () {
+        var show = secretEl.type === 'password';
+        secretEl.type = show ? 'text' : 'password';
+        revealBtn.querySelector('i').className = show ? 'ti ti-eye-off' : 'ti ti-eye';
+      });
 
+      saveBtn.addEventListener('click', function () {
+        var clientId = idEl.value.trim();
+        var clientSecret = secretEl.value.trim();
         if (!clientId || !clientSecret) {
-          setStatus('Both Client ID and Secret are required.', 'err');
+          setStatus('Both fields are required.', 'err');
           return;
         }
-
         setStatus('Saving…', '');
-        Homey.set('netatmo_client_id', clientId, (err1) => {
+        Homey.set('netatmo_client_id', clientId, function (err1) {
           if (err1) return setStatus('Failed to save Client ID.', 'err');
-          Homey.set('netatmo_client_secret', clientSecret, (err2) => {
+          Homey.set('netatmo_client_secret', clientSecret, function (err2) {
             if (err2) return setStatus('Failed to save Client Secret.', 'err');
-            Homey.api('POST', '/reconfigure', {}, (err3) => {
-              if (err3) return setStatus('Saved, but reload failed: ' + err3.message, 'err');
-              setStatus('Saved. OAuth2 client reloaded.', 'ok');
-            });
+            setStatus('Saved. Restarting app…', 'ok');
           });
         });
       });
 
-      clearBtn.addEventListener('click', () => {
+      clearBtn.addEventListener('click', function () {
         idEl.value = '';
         secretEl.value = '';
-        Homey.set('netatmo_client_id', '', () => {});
-        Homey.set('netatmo_client_secret', '', () => {});
-        Homey.api('POST', '/reconfigure', {}, () => {});
+        Homey.set('netatmo_client_id', '', function () {});
+        Homey.set('netatmo_client_secret', '', function () {});
         setStatus('Cleared.', 'ok');
       });
 

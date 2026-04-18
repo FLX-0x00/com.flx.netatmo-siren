@@ -35,6 +35,22 @@
         { "id": "off",  "title": { "en": "Off" } },
         { "id": "auto", "title": { "en": "Auto" } }
       ]
+    },
+    "siren_mode": {
+      "type": "enum",
+      "title": { "en": "Siren" },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "values": [
+        { "id": "no_sound",         "title": { "en": "Off" } },
+        { "id": "warning",          "title": { "en": "Warning" } },
+        { "id": "sound",            "title": { "en": "Alarm" } },
+        { "id": "playing_record_0", "title": { "en": "Recording 1" } },
+        { "id": "playing_record_1", "title": { "en": "Recording 2" } },
+        { "id": "playing_record_2", "title": { "en": "Recording 3" } },
+        { "id": "playing_record_3", "title": { "en": "Recording 4" } }
+      ]
     }
   },
 
@@ -103,7 +119,7 @@
           { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
         ]
       },
-      { "id": "siren_started", "title": { "en": "Siren started sounding" }, "hint": { "en": "Read-only: fires when the camera's built-in siren starts sounding. This app cannot trigger the siren itself." }, "args": [
+      { "id": "siren_started", "title": { "en": "Siren started sounding" }, "args": [
           { "name": "device", "type": "device", "filter": "driver_id=outdoor_camera" }
         ]
       },
@@ -234,6 +250,40 @@
         "args": [
           { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" }
         ]
+      },
+      { "id": "set_led_status",
+        "title": { "en": "Set status LED to [[state]]" },
+        "titleFormatted": { "en": "Set status LED to [[state]]" },
+        "hint": { "en": "Turns the small status LED on the camera body on or off (does not affect the IR/night-vision LEDs)." },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera|outdoor_camera|doorbell" },
+          { "name": "state", "type": "dropdown", "values": [
+            { "id": "on", "label": { "en": "On" } },
+            { "id": "off", "label": { "en": "Off" } }
+          ] }
+        ]
+      },
+      { "id": "set_notify_unknowns",
+        "title": { "en": "Set unknown-face notifications to [[state]]" },
+        "titleFormatted": { "en": "Set unknown-face notifications to [[state]]" },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" },
+          { "name": "state", "type": "dropdown", "values": [
+            { "id": "on", "label": { "en": "On" } },
+            { "id": "off", "label": { "en": "Off" } }
+          ] }
+        ]
+      },
+      { "id": "set_record_when_unknown",
+        "title": { "en": "Set recording on unknown face to [[state]]" },
+        "titleFormatted": { "en": "Set recording on unknown face to [[state]]" },
+        "args": [
+          { "name": "device", "type": "device", "filter": "driver_id=indoor_camera" },
+          { "name": "state", "type": "dropdown", "values": [
+            { "id": "on", "label": { "en": "On" } },
+            { "id": "off", "label": { "en": "Off" } }
+          ] }
+        ]
       }
     ]
   },
@@ -268,7 +318,7 @@
       "id": "outdoor_camera",
       "name": { "en": "Smart Outdoor Camera" },
       "class": "camera",
-      "capabilities": ["onoff", "alarm_motion", "light_mode"],
+      "capabilities": ["onoff", "alarm_motion", "light_mode", "siren_mode"],
       "capabilitiesOptions": {
         "onoff": {
           "title": { "en": "Monitoring" },

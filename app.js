@@ -193,6 +193,38 @@ class NetatmoCommunityApp extends OAuth2App {
 
     this.homey.flow.getActionCard('set_floodlight_mode')
       .registerRunListener(async (args) => args.device.triggerCapabilityListener('light_mode', args.mode));
+
+    // ─── Extended /setstate actions ──────────────────────────────
+    // All three are documented under
+    // https://dev.netatmo.com/apidocumentation/security#setstate
+    const toBool = (s) => s === 'on';
+
+    this.homey.flow.getActionCard('set_led_status')
+      .registerRunListener(async (args) => {
+        await args.device.oAuth2Client.setModuleState({
+          homeId: args.device.homeId,
+          moduleId: args.device.getData().id,
+          patch: { led_on_live: toBool(args.state) },
+        });
+      });
+
+    this.homey.flow.getActionCard('set_notify_unknowns')
+      .registerRunListener(async (args) => {
+        await args.device.oAuth2Client.setModuleState({
+          homeId: args.device.homeId,
+          moduleId: args.device.getData().id,
+          patch: { notify_unknowns: toBool(args.state) },
+        });
+      });
+
+    this.homey.flow.getActionCard('set_record_when_unknown')
+      .registerRunListener(async (args) => {
+        await args.device.oAuth2Client.setModuleState({
+          homeId: args.device.homeId,
+          moduleId: args.device.getData().id,
+          patch: { record_when_unknown: toBool(args.state) },
+        });
+      });
   }
 
 }

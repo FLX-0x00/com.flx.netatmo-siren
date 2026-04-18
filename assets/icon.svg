@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Netatmo Community — app icon. Glyph: Phosphor "house-line-fill" (MIT) -->
+<!-- Netatmo Community — app icon. Security camera glyph, transparent. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
-  <rect width="256" height="256" rx="48" fill="#2B2B2B"/>
-  <g transform="translate(32 32) scale(0.75)" fill="#FF7A00">
-    <path d="M240,208H224V136l2.34,2.34A8,8,0,0,0,237.66,127L139.31,28.68a16,16,0,0,0-22.62,0L18.34,127a8,8,0,0,0,11.32,11.31L32,136v72H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16Zm-88,0H104V160a4,4,0,0,1,4-4h40a4,4,0,0,1,4,4Z"/>
+  <g fill="#FF7A00" stroke="none">
+    <!-- Ceiling mount plate -->
+    <rect x="104" y="36" width="48" height="10" rx="4"/>
+    <!-- Mount stem -->
+    <rect x="124" y="46" width="8" height="24"/>
+
+    <!-- Camera body -->
+    <rect x="40" y="82" width="144" height="68" rx="18"/>
+
+    <!-- Bracket extending to the right -->
+    <path d="M184 104 h26 a10 10 0 0 1 10 10 v8 a10 10 0 0 1 -10 10 h-26 z"/>
+
+    <!-- Lens -->
+    <circle cx="148" cy="116" r="24" fill="#1f1f1f"/>
+    <circle cx="148" cy="116" r="10" fill="#FF7A00"/>
+
+    <!-- Status LED -->
+    <circle cx="60" cy="102" r="5" fill="#1f1f1f"/>
+  </g>
+
+  <!-- Wi-Fi symbol below the camera -->
+  <g transform="translate(72 208)">
+    <circle cx="0" cy="0" r="7" fill="#FF7A00"/>
+    <g fill="none" stroke="#FF7A00" stroke-linecap="round" stroke-width="9">
+      <path d="M -18 -8 a20 20 0 0 1 36 0"/>
+      <path d="M -36 -18 a40 40 0 0 1 72 0"/>
+    </g>
   </g>
 </svg>

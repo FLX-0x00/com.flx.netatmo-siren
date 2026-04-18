@@ -13,6 +13,11 @@ class OutdoorCameraDevice extends NetatmoBaseDevice {
   async onOAuth2Init() {
     await super.onOAuth2Init();
 
+    // Migration for devices paired before siren_mode existed.
+    if (!this.hasCapability('siren_mode')) {
+      await this.addCapability('siren_mode').catch((e) => this.error('addCapability siren_mode', e));
+    }
+
     this.registerCapabilityListener('onoff', async (value) => {
       await this._withTimeout(
         this.oAuth2Client.setMonitoring({
@@ -50,8 +55,8 @@ class OutdoorCameraDevice extends NetatmoBaseDevice {
       }
     }
     if (typeof m.siren_status === 'string') {
-      // Read-only echo so the condition card has something to query.
       await this.setStoreValue('siren_status', m.siren_status).catch(() => {});
+      await this.safeSetCapability('siren_mode', m.siren_status);
     }
     if (m.reachable === false) {
       await this.setUnavailable('Camera offline').catch(() => {});
@@ -88,6 +93,7 @@ class OutdoorCameraDevice extends NetatmoBaseDevice {
         if (starting) await driver.triggerSirenStart(this, tokens);
         else await driver.triggerSirenStop(this, tokens);
         await this.setStoreValue('siren_status', starting ? 'sound' : 'no_sound').catch(() => {});
+        await this.safeSetCapability('siren_mode', starting ? 'sound' : 'no_sound');
         break;
       }
       case 'connection':

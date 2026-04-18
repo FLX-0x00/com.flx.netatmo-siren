@@ -1,0 +1,8 @@
+node_modules/
+.env
+.homeybuild/
+.homeycompose/
+*.log
+.DS_Store
+.vscode/
+.pnpm-store/

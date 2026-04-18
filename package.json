@@ -1,0 +1,22 @@
+{
+  "name": "com.flx.netatmo-siren",
+  "version": "1.0.0",
+  "description": "Control Netatmo Smart Sirens and Outdoor Cameras with siren from Homey Pro.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"No tests yet\" && exit 0",
+    "run:app": "homey app run",
+    "install:app": "homey app install"
+  },
+  "author": "FLX",
+  "license": "MIT",
+  "dependencies": {
+    "homey-oauth2app": "^3.4.0",
+    "source-map-support": "^0.5.21"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

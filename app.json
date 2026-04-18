@@ -1,0 +1,201 @@
+{
+  "id": "com.flx.netatmo-siren",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": ["local", "cloud"],
+  "name": {
+    "en": "Netatmo Siren"
+  },
+  "description": {
+    "en": "Fast and exclusive control of Netatmo Smart Sirens and Outdoor Cameras with built-in siren."
+  },
+  "category": ["security"],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "FLX"
+  },
+  "brandColor": "#2B2B2B",
+  "drivers": [
+    {
+      "id": "standalone_siren",
+      "name": {
+        "en": "Netatmo Smart Indoor Siren"
+      },
+      "class": "other",
+      "capabilities": ["onoff"],
+      "capabilitiesOptions": {
+        "onoff": {
+          "title": {
+            "en": "Siren"
+          },
+          "insightsTitleTrue": {
+            "en": "Siren activated"
+          },
+          "insightsTitleFalse": {
+            "en": "Siren deactivated"
+          }
+        }
+      },
+      "platforms": ["local", "cloud"],
+      "connectivity": ["cloud"],
+      "images": {
+        "small": "/drivers/standalone_siren/assets/images/small.png",
+        "large": "/drivers/standalone_siren/assets/images/large.png",
+        "xlarge": "/drivers/standalone_siren/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "login_oauth2",
+          "template": "login_oauth2"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "outdoor_camera_siren",
+      "name": {
+        "en": "Netatmo Outdoor Camera Siren"
+      },
+      "class": "other",
+      "capabilities": ["onoff"],
+      "capabilitiesOptions": {
+        "onoff": {
+          "title": {
+            "en": "Siren"
+          },
+          "insightsTitleTrue": {
+            "en": "Siren activated"
+          },
+          "insightsTitleFalse": {
+            "en": "Siren deactivated"
+          }
+        }
+      },
+      "platforms": ["local", "cloud"],
+      "connectivity": ["cloud"],
+      "images": {
+        "small": "/drivers/outdoor_camera_siren/assets/images/small.png",
+        "large": "/drivers/outdoor_camera_siren/assets/images/large.png",
+        "xlarge": "/drivers/outdoor_camera_siren/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "login_oauth2",
+          "template": "login_oauth2"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    }
+  ],
+  "flow": {
+    "triggers": [
+      {
+        "id": "siren_turned_on",
+        "title": {
+          "en": "The siren was activated"
+        },
+        "hint": {
+          "en": "Triggers when the Netatmo siren starts sounding."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
+          }
+        ]
+      },
+      {
+        "id": "siren_turned_off",
+        "title": {
+          "en": "The siren was deactivated"
+        },
+        "hint": {
+          "en": "Triggers when the Netatmo siren stops sounding."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "is_siren_sounding",
+        "title": {
+          "en": "The siren !{{is|is not}} sounding"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "sound_the_alarm",
+        "title": {
+          "en": "Sound the alarm"
+        },
+        "hint": {
+          "en": "Activates the Netatmo siren immediately."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
+          }
+        ]
+      },
+      {
+        "id": "silence_the_alarm",
+        "title": {
+          "en": "Silence the alarm"
+        },
+        "hint": {
+          "en": "Deactivates the Netatmo siren."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=standalone_siren|outdoor_camera_siren"
+          }
+        ]
+      }
+    ]
+  }
+}
